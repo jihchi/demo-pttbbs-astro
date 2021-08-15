@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import { getArticle, getPopularArticles } from '../../../shared/endpoints.mjs';
+
+export async function getStaticPaths() {
+  const response = await getPopularArticles();
+  const json = await response.json();
+  return json.list.map(item => ({
+    params: { boardId: item.bid, articleId: item.aid }
+  }));
+}
+
+const { boardId, articleId } = Astro.request.params;
+const response = await getArticle(articleId, boardId);
+const json = await response.json();
+const item = json;
+
+console.log({ boardId, articleId, json })
+---
+<BaseLayout title={item.title}>
+  <main>
+    <header>
+      <h1>{item.title}</h1>
+    </header>
+  </main>
+</BaseLayout>
