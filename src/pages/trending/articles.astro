@@ -4,7 +4,7 @@ import { getPopularArticles } from '../../shared/endpoints.mjs';
 
 const resp = await getPopularArticles();
 const json = await resp.json();
-const { list: items } = json;
+const articles = json.list;
 ---
 <BaseLayout title="Popular Articles">
   <main>
@@ -12,9 +12,9 @@ const { list: items } = json;
       <h1>Trending Articles</h1>
     </header>
     <ul>
-    {items.map(item => (
-      <li><a href="{`/r/${item.bid}/${item.aid}`}">{item.title}</a></li>
-    ))}
+      {articles.map(({ bid, aid, title }) => 
+        <li><a href="{`/r/${bid}/${aid}`}">{title}</a></li>
+      )}
     </ul>
   </main>
 </BaseLayout>

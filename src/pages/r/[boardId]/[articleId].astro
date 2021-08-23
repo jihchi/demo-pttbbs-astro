@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import * as endpoints from '../../../shared/endpoints.mjs';
+
+export async function getStaticPaths() {
+  const boards = await getPopularBoards();
+  const articles = await getArticelsByBoards(boards);
+  const result = articles.map(({ bid, aid }) => ({
+    params: { boardId: bid, articleId: aid }
+  }));
+  return result;
+
+  async function getPopularBoards() {
+    const response = await endpoints.getPopularBoards();
+    const json = await response.json();
+    return json.list;
+  }
+
+  async function getArticelsByBoards(boards) {
+    const responses = await Promise.all(boards.map(({ bid }) => endpoints.getArticlesByBoard(bid, { limit: 100 })))
+    const jsons = await Promise.all(responses.map(response => response.json()));
+    return jsons.flatMap(json => json.list);
+  }
+}
+
+const { boardId, articleId } = Astro.request.params;
+const response = await endpoints.getArticle(articleId, boardId);
+const json = await response.json();
+const { content } = json;
+const title = response.ok ? json.title : `ERROR: ${json?.Msg ?? "Unknown"}`;
+---
+<BaseLayout title={title}>
+  <main>
+    <header>
+      <h1>{title}</h1>
+    </header>
+    <div>
+      {content
+        .flatMap(paragraphs => paragraphs)
+        .map(({ text, color0, color1 }) => 
+          <p>{text}</p>
+        )
+      }
+    </div>
+  </main>
+</BaseLayout>

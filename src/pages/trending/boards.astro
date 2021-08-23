@@ -4,7 +4,7 @@ import { getPopularBoards } from '../../shared/endpoints.mjs';
 
 const resp = await getPopularBoards();
 const json = await resp.json();
-const { list: items } = json;
+const boards = json.list;
 ---
 <BaseLayout title="Popular Boards">
   <main>
@@ -12,9 +12,9 @@ const { list: items } = json;
       <h1>Trending Boards</h1>
     </header>
     <ul>
-    {items.map(item => (
-      <li><a href="{`/r/${item.bid}`}">{item.title}</a></li>
-    ))}
+      {boards.map(({ bid, title }) => (
+        <li><a href="{`/r/${bid}`}">{title}</a></li>
+      ))}
     </ul>
   </main>
 </BaseLayout>
