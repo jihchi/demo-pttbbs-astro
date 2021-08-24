@@ -17,7 +17,7 @@ export async function getStaticPaths() {
   }
 
   async function getArticelsByBoards(boards) {
-    const responses = await Promise.all(boards.map(({ bid }) => endpoints.getArticlesByBoard(bid, { limit: 100 })))
+    const responses = await Promise.all(boards.map(({ bid }) => endpoints.getArticlesByBoard(bid)));
     const jsons = await Promise.all(responses.map(response => response.json()));
     return jsons.flatMap(json => json.list);
   }
