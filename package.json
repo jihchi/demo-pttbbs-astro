@@ -1,7 +1,7 @@
 {
     "devDependencies": {
         "@astrojs/renderer-react": "^0.2.0",
-        "astro": "^0.20.4"
+        "astro": "^0.20.5"
     },
     "name": "demo-pttbbs-astro",
     "private": true,
